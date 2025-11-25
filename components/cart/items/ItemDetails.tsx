@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { Product } from '@/interfaces/Items'
+import { Product } from '@/interfaces/ItemsInterfaces'
 
 export default function ItemDetails({id, name, quantity, price}: Readonly<Product>) {
 
@@ -40,13 +40,7 @@ const styles = StyleSheet.create({
     width: 40,
     fontSize: 17.5
   },
-  prices:{
-    width: 100,
-  },
-  price:{
-    fontSize: 20
-  },
-  priceSumarized:{
-    fontSize: 20
-  }
+  prices: { width: 100 },
+  price: { fontSize: 20 },
+  priceSumarized: { fontSize: 20 }
 })

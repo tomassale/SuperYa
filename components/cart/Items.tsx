@@ -1,6 +1,6 @@
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
-import { ArrayCart } from '@/interfaces/Items'
+import { ArrayCart } from '@/interfaces/ItemsInterfaces'
 import Colors from '@/constants/Colors'
 import ItemDetails from './items/ItemDetails'
 import ItemFunctions from './items/ItemFunctions'
@@ -9,10 +9,10 @@ export default function Items({items}: Readonly<ArrayCart>) {
 
   return (
     <View style={styles.container}>
-      {items.map(item => (
+      {items.map((item, index: number) => (
         <View key={item.id} style={styles.itemRow}>
           <ItemDetails 
-            id={item.id} 
+            id={index}
             name={item.name} 
             quantity={item.quantity} 
             price={item.price}

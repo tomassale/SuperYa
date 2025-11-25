@@ -1,18 +1,25 @@
 import { useState, useContext, createContext, useMemo } from 'react'
+import type { Product } from '@/interfaces/ItemsInterfaces'
 
 type CartContextType = {
-  cartItems: any[]
-  setCartItems: React.Dispatch<React.SetStateAction<any[]>>
+  cartItems: Product[]
+  setCartItems: React.Dispatch<React.SetStateAction<Product[]>>
+  totalPrice: number
 }
 
 const CartContext = createContext<CartContextType | null>(null)
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [cartItems, setCartItems] = useState<any[]>([])
+export function CartProvider({ children }: { readonly children: React.ReactNode }) {
+  const [cartItems, setCartItems] = useState<Product[]>([])
+
+  const totalPrice = useMemo(
+    () => cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0),
+    [cartItems]
+  )
 
   const value = useMemo(
-    () => ({ cartItems, setCartItems }),
-    [cartItems]
+    () => ({ cartItems, setCartItems, totalPrice }),
+    [cartItems, totalPrice]
   )
 
   return (

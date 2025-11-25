@@ -11,9 +11,18 @@ type AddItem = {
   setName: (val: string) => void
   setQuantity: (val: string) => void
   setPrice: (val: string) => void
+  onAddSuccess?: () => void
 }
 
-export default function ButtonAdd({ name, quantity, price, setName, setQuantity, setPrice }: Readonly<AddItem>) {
+export default function ButtonAdd({
+  name,
+  quantity,
+  price,
+  setName,
+  setQuantity,
+  setPrice,
+  onAddSuccess,
+}: Readonly<AddItem>) {
   
   const { setCartItems } = useCart()
 
@@ -21,16 +30,17 @@ export default function ButtonAdd({ name, quantity, price, setName, setQuantity,
     if(name && quantity && price){
       setCartItems(prev => [
         ...prev,
-        { 
-          id: Date.now(),
-          name, 
-          quantity: Number(quantity), 
-          price: Number(price) 
+        {
+          id: prev.length,
+          name,
+          quantity: Number(quantity),
+          price: Number(price)
         }
       ])
       setName('')
       setQuantity('')
       setPrice('')
+      onAddSuccess?.()
     }
   }
 
@@ -42,7 +52,6 @@ export default function ButtonAdd({ name, quantity, price, setName, setQuantity,
     </View>
   )
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -59,6 +68,5 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     fontSize: FontSize.button
-    
   }
 })

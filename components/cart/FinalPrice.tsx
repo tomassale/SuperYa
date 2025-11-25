@@ -1,17 +1,16 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { ArrayCart } from '@/interfaces/Items';
+import { ArrayCart } from '@/interfaces/ItemsInterfaces';
 import Colors from '@/constants/Colors';
 
 export default function FinalPrice({ items }: Readonly<ArrayCart> ) {
 
-  let precioAcumulador = 0;
-  
+  let finalPrice: number = 0
   items.forEach((obj) => {
-    precioAcumulador += obj.price * obj.quantity;
+    finalPrice += obj.price * obj.quantity;
   })
 
-  const precioFinal: string = precioAcumulador.toLocaleString('es-AR', {
+  const precioFinal: string = finalPrice.toLocaleString('es-AR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   })

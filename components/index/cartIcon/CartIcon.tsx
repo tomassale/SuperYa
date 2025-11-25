@@ -22,7 +22,7 @@ export default function CartIcon() {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 60,
+    bottom: 30,
     right: 0,
   },
   image:{

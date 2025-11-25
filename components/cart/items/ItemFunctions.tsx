@@ -1,43 +1,18 @@
 import { StyleSheet, View, Image, Pressable } from 'react-native'
 import React from 'react'
 import { useCart } from '@/context/CartContext'
-
-const menosImg = require('@/assets/img/Minus.png')
-const masImg = require('@/assets/img/Plus.png')
-const trashImg = require('@/assets/img/Trash.png')
+import ItemUtils from '@/utils/ItemUtils'
 
 export default function ItemFunctions({ itemId }: {itemId: number}) {
 
   const { cartItems, setCartItems }  = useCart()
 
-  const restar = () => {
-    setCartItems(prev => (
-      prev.map(obj => (
-        obj.id === itemId
-        ? { ...obj, quantity: Math.max(obj.quantity - 1, 1)}
-        : obj
-      ))
-    ))
-  }
-
-  const sumar = () => {
-    setCartItems(prev => (
-      prev.map(obj =>(
-        obj.id === itemId
-        ? { ...obj, quantity: obj.quantity + 1}
-        : obj
-      ))
-    ))
-  }
-
-  const borrar = () => {
-    setCartItems(prev => prev.filter(item => item.id !== itemId))
-  }
+  const utils = new ItemUtils(setCartItems, itemId)
   
   const functions = [
-    { id: 1, function: restar, img: menosImg},
-    { id: 2, function: sumar, img: masImg},
-    { id: 3, function: borrar, img: trashImg}
+    { id: 1, function: utils.restar, img: require('@/assets/img/Minus.png')},
+    { id: 2, function: utils.sumar, img: require('@/assets/img/Plus.png')},
+    { id: 3, function: utils.borrar, img: require('@/assets/img/Trash.png')}
   ]
   
   return cartItems? (   
