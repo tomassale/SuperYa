@@ -162,7 +162,7 @@ export function useCalculator() {
     previousValue,
     updateDisplay,
   ])
-
+  //
   const handleClear = useCallback(() => {
     setCurrentValue('')
     setPreviousValue(null)
