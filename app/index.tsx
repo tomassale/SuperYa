@@ -1,13 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import React, { useEffect, useRef, useState } from 'react';
-import Toast from '@/components/index/notification/Notification';
-import Calculator from '@/components/index/calculator/Calculator';
-import History from '@/components/index/history/History';
-import CartIcon from '@/components/index/cartIcon/CartIcon';
-import Form from '@/components/index/form/Form';
-import Colors from '@/constants/Colors';
-import FontSize from '@/constants/Hierarchies';
+import { StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import React, { useEffect, useRef, useState } from 'react'
+import Toast from '@/components/index/notification/Notification'
+import Calculator from '@/components/index/calculator/Calculator'
+import History from '@/components/index/history/History'
+import CartIcon from '@/components/index/cartIcon/CartIcon'
+import Form from '@/components/index/form/Form'
+import Colors from '@/constants/Colors'
+import FontSize from '@/constants/Hierarchies'
 
 export default function Page() {
   const [toastVisible, setToastVisible] = useState(false)
@@ -73,4 +73,4 @@ const styles = StyleSheet.create({
     fontSize: 36,
     color: '#38434D',
   },
-});
+})

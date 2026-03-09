@@ -10,9 +10,9 @@ export default function Items({items}: Readonly<ArrayCart>) {
   return (
     <View style={styles.container}>
       {items.map((item, index: number) => (
-        <View key={item.id} style={styles.itemRow}>
+        <View key={index} style={styles.itemRow}>
           <ItemDetails 
-            id={index}
+            id={item.id}
             name={item.name} 
             quantity={item.quantity} 
             price={item.price}

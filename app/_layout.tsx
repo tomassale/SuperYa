@@ -4,7 +4,7 @@ import { Slot } from 'expo-router'
 export default function RootLayout() {
   return (
     <CartProvider>
-      <Slot /> 
+      <Slot/> 
     </CartProvider>
   )
 }

@@ -4,7 +4,7 @@
     "slug": "app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/img/IconApp.png",
+    "icon": "./assets/img/IconApp.png", 
     "scheme": "app",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -14,7 +14,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/img/IconApp.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#A2A498"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.tomas.dev.app",
@@ -30,10 +30,10 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/img/IconApp.png",
+          "image": "./assets/img/Icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#A2A498"
         }
       ],
       "expo-web-browser"

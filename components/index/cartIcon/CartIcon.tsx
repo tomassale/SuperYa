@@ -13,7 +13,7 @@ export default function CartIcon() {
     <View style={styles.container}>
       <Text style={styles.number}>{itemsQuantity}</Text>
       <Link href="/Cart">
-        <Image style={styles.image} source={require("@/assets/img/Icon.png")}/>
+        <Image style={styles.image} source={require("@/assets/img/IconApp.png")}/>
       </Link>
     </View>
   )

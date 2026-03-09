@@ -12,7 +12,7 @@ interface Input {
 }
 
 export default function FormItem({data}: Readonly<{data: Input[]}>) {
-
+  
   return (
     <>
       {data.map((obj: any) => (
@@ -21,6 +21,7 @@ export default function FormItem({data}: Readonly<{data: Input[]}>) {
           <TextInput
             style={styles.input}
             placeholder={obj.placeholder}
+            placeholderTextColor='#807D77'
             value={obj.name}
             keyboardType={obj.keyboardType}
             onChangeText={obj.setData}
@@ -46,3 +47,4 @@ const styles = StyleSheet.create({
     borderRadius: 8
   },
 });
+
