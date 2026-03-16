@@ -18,7 +18,7 @@ export default function ItemFunctions({ itemId }: {itemId: number}) {
   return cartItems? (   
     <View style={styles.container}>
       {functions.map(obj => (
-        <Pressable key={obj.id} onPress={obj.function}>
+        <Pressable key={obj.id} onPress={obj.function} hitSlop={15}>
           <Image source={obj.img} style={styles.image}/>
         </Pressable>
       ))}
@@ -29,7 +29,7 @@ export default function ItemFunctions({ itemId }: {itemId: number}) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    gap: 15,
+    gap: 16,
     height: 50,
     alignItems: 'center',
     margin: 'auto',

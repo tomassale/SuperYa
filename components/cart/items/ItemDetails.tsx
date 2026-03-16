@@ -80,7 +80,7 @@ export default function ItemDetails({ id, name, quantity, price }: Readonly<Prod
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 2,
     alignItems: 'center',
   },
   name: {
