@@ -3,6 +3,10 @@ import { Link } from 'expo-router'
 import React from 'react'
 import Colors from '@/constants/Colors'
 import { useCart } from '@/context/CartContext'
+import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive'
+
+const ICON_SIZE = moderateScale(70)
+const BADGE_SIZE = moderateScale(20)
 
 export default function CartIcon() {
 
@@ -11,10 +15,10 @@ export default function CartIcon() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.number}>{itemsQuantity}</Text>
       <Link href="/Cart">
         <Image style={styles.image} source={require("@/assets/img/IconApp.png")}/>
       </Link>
+      <Text style={styles.number}>{itemsQuantity}</Text>
     </View>
   )
 }
@@ -22,23 +26,28 @@ export default function CartIcon() {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 30,
-    right: 0,
+    bottom: verticalScale(30),
+    right: moderateScale(4),
+    width: ICON_SIZE,
+    height: ICON_SIZE,
   },
   image:{
-    height: 70,
-    width: 70
+    height: ICON_SIZE,
+    width: ICON_SIZE,
   },
   number: {
-    width: 19,
-    textAlign: 'center',
     position: 'absolute',
-    fontSize: 12,
+    top: -BADGE_SIZE / 4,
+    right: -BADGE_SIZE / 4,
+    minWidth: BADGE_SIZE,
+    height: BADGE_SIZE,
+    lineHeight: BADGE_SIZE,
+    textAlign: 'center',
+    fontSize: scaleFont(12),
+    paddingHorizontal: moderateScale(4),
+    borderRadius: BADGE_SIZE / 2,
+    overflow: 'hidden',
     zIndex: 1,
-    bottom: 65,
-    paddingRight: 2,
-    marginLeft: 60,
-    borderRadius: 10,
     backgroundColor: Colors.numeroCart,
   }
 })

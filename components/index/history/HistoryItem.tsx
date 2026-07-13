@@ -1,6 +1,7 @@
 import { View, ScrollView, Text, StyleSheet } from 'react-native';
 import { History } from '@/interfaces/ItemsInterfaces'
 import HistoryCart from './historyCart/HistoryCartButton';
+import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive';
 
 interface HistoryItemProps {
   data: History[];
@@ -30,26 +31,26 @@ export default function HistoryItem({data}: Readonly<HistoryItemProps>){
 
 const styles = StyleSheet.create({
   content: {
-    paddingBottom: 120,
+    paddingBottom: verticalScale(120),
   },
   item: {
-    padding: 10,
+    padding: moderateScale(10),
     width: 'auto',
     borderBottomWidth: 1,
     borderBottomColor: 'black',
-    gap: 15,
+    gap: verticalScale(15),
   },
   date: {
     textAlign: 'center',
-    fontSize: 24
+    fontSize: scaleFont(24)
   },
   price: {
-    fontSize: 20,
-    marginVertical: 8,
+    fontSize: scaleFont(20),
+    marginVertical: verticalScale(8),
   },
   empty: {
     textAlign: 'center',
-    fontSize: 25,
-    marginTop: 20
+    fontSize: scaleFont(25),
+    marginTop: verticalScale(20)
   }
 })

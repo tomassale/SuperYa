@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Image, TouchableOpacity, Dimensions, Pressable } from 'react-native'
 import { getData } from '@/utils/HistoryUtils'
 import HistoryItem from './HistoryItem';
+import { moderateScale, verticalScale } from '@/utils/Responsive';
 
 const { height, width } = Dimensions.get('window');
 
@@ -39,19 +40,19 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     zIndex: 1,
-    marginTop: -160,
-    marginLeft: -20,
+    marginTop: verticalScale(-160),
+    marginLeft: moderateScale(-20),
   },
   logoMenu: {
-    height: 60,
-    width: 70
+    height: moderateScale(60),
+    width: moderateScale(70)
   },
   menu: {
     height: height + 110,
-    width: 263,
-    marginTop: -61,
-    marginLeft: -25,
-    paddingTop: 40,
+    width: moderateScale(263),
+    marginTop: verticalScale(-61),
+    marginLeft: moderateScale(-25),
+    paddingTop: verticalScale(40),
     backgroundColor: 'white',
   },
   closeMenu: {

@@ -1,4 +1,5 @@
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native'
+import { moderateScale, scaleFont } from '@/utils/Responsive'
 
 export default function CalculatorButtons({data}: any){
 
@@ -17,34 +18,34 @@ const styles = StyleSheet.create({
   buttonContainer:{
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
-    marginStart: 7
+    gap: moderateScale(8),
+    marginStart: moderateScale(7)
   },
   button: {
     backgroundColor: '#D9D9D9',
-    padding: 7,
-    minWidth: 50,
+    padding: moderateScale(7),
+    minWidth: moderateScale(50),
   },
   buttonText: {
-    fontSize: 25,
+    fontSize: scaleFont(25),
     fontWeight: 'bold',
     textAlign: 'center'
   },
   clearText: {
-    color: 'red', 
-    fontSize: 25,
+    color: 'red',
+    fontSize: scaleFont(25),
     fontWeight: 'bold',
     textAlign: 'center'
   },
   deleteText: {
-    fontSize: 30,
+    fontSize: scaleFont(30),
     fontWeight: 'bold',
     textAlign: 'center',
     marginTop: -10
   },
   equalsButton: {
     backgroundColor: '#D9D9D9',
-    padding: 7,
-    width: 107,
+    padding: moderateScale(7),
+    width: moderateScale(107),
   },
 })

@@ -3,6 +3,7 @@ import { View, Pressable, StyleSheet, Image, Dimensions } from 'react-native';
 import CalculatorButtons from './CalculatorButtons';
 import CalculatorDisplay from './CalculatorDisplay';
 import { DECIMAL_BUTTON, useCalculator } from '@/hooks/useCalculator';
+import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive';
 
 const { height, width } = Dimensions.get('window');
 
@@ -70,25 +71,25 @@ export default function Calculator(){
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    bottom: 125,
+    bottom: verticalScale(125),
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
   image:{
-    width: 64,
-    height: 84
+    width: moderateScale(64),
+    height: moderateScale(84)
   },
   calculator:{
     backgroundColor: '#979797',
-    width: 258,
-    height: 450,
+    width: moderateScale(258),
+    height: verticalScale(450),
     borderRadius: 16,
     position: 'absolute',
-    bottom: -60,
+    bottom: verticalScale(-60),
     left: 0,
     zIndex: 2,
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    paddingHorizontal: moderateScale(10),
+    paddingTop: verticalScale(10),
   },
   closeCalculator:{
     position: 'absolute',
@@ -102,22 +103,22 @@ const styles = StyleSheet.create({
   },
   display: {
     width: '100%',
-    minHeight: 96,
+    minHeight: verticalScale(96),
     backgroundColor: '#B5B5B5',
     borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    marginBottom: 12,
+    paddingHorizontal: moderateScale(14),
+    paddingVertical: verticalScale(12),
+    marginBottom: verticalScale(12),
     justifyContent: 'center',
   },
   expression: {
     color:'#101010',
-    fontSize: 16,
+    fontSize: scaleFont(16),
     textAlign: 'right',
   },
   current: {
     color: '#FFFFFF',
-    fontSize: 42,
+    fontSize: scaleFont(42),
     fontWeight: '700',
     textAlign: 'right',
   },

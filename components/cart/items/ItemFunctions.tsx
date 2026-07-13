@@ -2,6 +2,7 @@ import { StyleSheet, View, Image, Pressable } from 'react-native'
 import React from 'react'
 import { useCart } from '@/context/CartContext'
 import ItemUtils from '@/utils/ItemUtils'
+import { moderateScale, verticalScale } from '@/utils/Responsive'
 
 export default function ItemFunctions({ itemId }: {itemId: number}) {
 
@@ -29,13 +30,13 @@ export default function ItemFunctions({ itemId }: {itemId: number}) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    gap: 16,
-    height: 50,
+    gap: moderateScale(16),
+    height: verticalScale(50),
     alignItems: 'center',
-    margin: 'auto',
+    marginHorizontal: moderateScale(10),
   },
   image:{
-    height: 20,
-    width: 20
+    height: moderateScale(20),
+    width: moderateScale(20)
   }
 })

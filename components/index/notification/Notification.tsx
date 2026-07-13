@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { Text, StyleSheet, Animated } from 'react-native'
+import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive'
 
 type ToastProps = {
   readonly visible: boolean
@@ -43,11 +44,11 @@ const Toast = ({ visible }: ToastProps) => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: 50,
-    right: 5,
+    top: verticalScale(50),
+    right: moderateScale(5),
     backgroundColor: 'rgb(122, 189, 108)',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: verticalScale(12),
+    paddingHorizontal: moderateScale(16),
     borderRadius: 12,
     shadowColor: '#000',
     shadowOpacity: 0.15,
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    fontSize: 16,
+    fontSize: scaleFont(16),
     fontWeight: '600',
   },
 })

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ButtonAdd from './ButtonAdd'
 import FormItem from './FormItem'
+import { verticalScale } from '@/utils/Responsive'
 
 type FormProps = {
   readonly onItemAdded?: () => void
@@ -45,6 +46,6 @@ export default function Form({ onItemAdded }: Readonly<FormProps>) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    marginTop: 40,
+    marginTop: verticalScale(40),
   },
 })

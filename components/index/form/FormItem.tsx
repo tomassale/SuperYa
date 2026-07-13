@@ -1,6 +1,7 @@
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import FontSize from '@/constants/Hierarchies';
 import Colors from '@/constants/Colors';
+import { moderateScale, verticalScale, wp } from '@/utils/Responsive';
 
 interface Input {
   id: number
@@ -34,16 +35,18 @@ export default function FormItem({data}: Readonly<{data: Input[]}>) {
 
 const styles = StyleSheet.create({
   label:{
-    marginLeft: 30,
+    marginLeft: moderateScale(30),
     fontSize: FontSize.label,
     alignSelf: 'flex-start'
   },
   input:{
     backgroundColor: Colors.input,
-    width: 300,
-    margin: 10,
+    width: wp(80),
+    maxWidth: 340,
+    margin: moderateScale(10),
     fontSize: FontSize.input,
-    paddingHorizontal: 10,
+    paddingHorizontal: moderateScale(10),
+    paddingVertical: verticalScale(4),
     borderRadius: 8
   },
 });

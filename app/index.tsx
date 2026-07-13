@@ -8,6 +8,7 @@ import CartIcon from '@/components/index/cartIcon/CartIcon'
 import Form from '@/components/index/form/Form'
 import Colors from '@/constants/Colors'
 import FontSize from '@/constants/Hierarchies'
+import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive'
 
 export default function Page() {
   const [toastVisible, setToastVisible] = useState(false)
@@ -51,13 +52,13 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     position: 'relative',
-    padding: 24,
+    padding: moderateScale(24),
     backgroundColor: Colors.fondo,
   },
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 24,
+    paddingTop: verticalScale(24),
   },
   main: {
     flex: 1,
@@ -67,10 +68,10 @@ const styles = StyleSheet.create({
     color: Colors.titulo,
     textShadowColor: 'black',
     textShadowRadius: 7,
-    marginTop: 50
+    marginTop: verticalScale(50)
   },
   subtitle: {
-    fontSize: 36,
+    fontSize: scaleFont(36),
     color: '#38434D',
   },
 })

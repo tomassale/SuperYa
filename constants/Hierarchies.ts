@@ -1,8 +1,10 @@
+import { scaleFont } from '@/utils/Responsive'
+
 const FontSize = {
-  title: 70,
-  label: 25,
-  input: 20,
-  button: 22
+  title: scaleFont(70),
+  label: scaleFont(25),
+  input: scaleFont(20),
+  button: scaleFont(22)
 }
 
 export default FontSize

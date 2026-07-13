@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import React from 'react'
 import Colors from '@/constants/Colors'
 import { useRouter } from 'expo-router'
+import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive'
 
 export default function Finish() {
 
@@ -29,13 +30,16 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: verticalScale(20),
   },
   image: {
-    margin: 'auto',
-    marginBottom: -370,
+    width: moderateScale(120),
+    height: moderateScale(120),
+    resizeMode: 'contain',
   },
   text: {
-    margin: 'auto',
-    fontSize: 30
+    fontSize: scaleFont(30)
   }
 })

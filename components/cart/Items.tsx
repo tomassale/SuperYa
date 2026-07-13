@@ -4,6 +4,7 @@ import { ArrayCart } from '@/interfaces/ItemsInterfaces'
 import Colors from '@/constants/Colors'
 import ItemDetails from './items/ItemDetails'
 import ItemFunctions from './items/ItemFunctions'
+import { moderateScale, verticalScale } from '@/utils/Responsive'
 
 export default function Items({items}: Readonly<ArrayCart>) {
 
@@ -26,12 +27,14 @@ export default function Items({items}: Readonly<ArrayCart>) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    padding: moderateScale(10),
   },
   itemRow:{
     backgroundColor: Colors.input,
-    margin: 5,
+    margin: moderateScale(5),
     flexDirection: 'row',
-    paddingVertical: 15
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: verticalScale(15)
   },
 })

@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet, Modal, Pressable } from 'react-native';
 import HistoryCartItem from './HistoryCartItem'
-import FontSize from '@/constants/Hierarchies';
 import { ArrayCart } from '@/interfaces/ItemsInterfaces';
+import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive';
 
 export function HistoryCartModal({ visible, onClose, date, cart }: Readonly<{ 
   visible: boolean; 
@@ -44,36 +44,37 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.25)',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: moderateScale(24),
   },
   item: {
     backgroundColor: '#DFDFDF',
     borderRadius: 20,
-    height: 480,
+    height: verticalScale(480),
+    maxHeight: '85%',
     width: '100%',
     maxWidth: 320,
-    paddingBottom: 20,
-    paddingHorizontal: 18,
+    paddingBottom: verticalScale(20),
+    paddingHorizontal: moderateScale(18),
     borderWidth: 2,
     borderColor: '#1F1F1F',
   },
   close: {
     alignSelf: 'flex-end',
-    marginTop: 12,
-    marginRight: 4,
-    fontSize: 26,
+    marginTop: verticalScale(12),
+    marginRight: moderateScale(4),
+    fontSize: scaleFont(26),
     fontWeight: 'bold',
     color: '#1E1E1E',
   },
   content: {
     flex: 1,
-    marginBottom: 10,
-    gap: 12,
+    marginBottom: verticalScale(10),
+    gap: verticalScale(12),
   },
   title: {
     textAlign: 'center',
-    fontSize: FontSize.title - 30,
-    marginBottom: 6,
+    fontSize: scaleFont(40),
+    marginBottom: verticalScale(6),
     color: '#DCE897',
     fontWeight: '500',
     textShadowColor: '#00000060',
@@ -82,8 +83,8 @@ const styles = StyleSheet.create({
   },
   empty: {
     textAlign: 'center',
-    marginTop: 40,
-    fontSize: 18,
+    marginTop: verticalScale(40),
+    fontSize: scaleFont(18),
     color: '#2B2B2B',
   }
 })

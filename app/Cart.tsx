@@ -5,6 +5,7 @@ import FinalPrice from '@/components/cart/FinalPrice'
 import ButtonFinish from '@/components/cart/ButtonFinish'
 import Colors from '@/constants/Colors'
 import { useCart } from '@/context/CartContext'
+import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive'
 
 export default function Cart() {
   const { cartItems, totalPrice } = useCart()
@@ -38,32 +39,32 @@ const styles = StyleSheet.create({
   title: {
     alignSelf: 'center',
     color: Colors.titulo,
-    fontSize: 38,
-    marginTop: 30,
+    fontSize: scaleFont(38),
+    marginTop: verticalScale(30),
     textShadowColor: 'black',
     textShadowRadius: 7,
   },
   back:{
-    marginLeft: 20,
-    marginTop: 50,
+    marginLeft: moderateScale(20),
+    marginTop: verticalScale(50),
     flexDirection: 'row',
     alignItems: 'center',
     fontWeight: 'bold'
   },
   text:{
-    fontSize: 25,
+    fontSize: scaleFont(25),
     color: '#626262',
   },
   arrow:{
-    height: 23,
-    width: 8,
-    marginRight: 8,
+    height: verticalScale(23),
+    width: moderateScale(8),
+    marginRight: moderateScale(8),
   },
   empty: {
     textAlign: 'center',
-    fontSize: 25,
-    paddingHorizontal: 13,
-    marginTop: 30,
+    fontSize: scaleFont(25),
+    paddingHorizontal: moderateScale(13),
+    marginTop: verticalScale(30),
     alignContent: 'center',
   }
 })

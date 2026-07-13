@@ -3,6 +3,8 @@ import React from 'react'
 import Colors from '@/constants/Colors'
 import FontSize from '@/constants/Hierarchies'
 import { useCart } from '@/context/CartContext'
+import parseInputNumber from '../../../utils/ComaReplace';
+import { moderateScale, verticalScale } from '@/utils/Responsive'
 
 type AddItem = {
   name: string
@@ -27,14 +29,16 @@ export default function ButtonAdd({
   const { setCartItems } = useCart()
 
   const handleSubmit = () => {
-    if(name && quantity && price){
+    const parsedPrice = parseInputNumber(price)
+
+    if (name.trim() !== null && parsedPrice !== null) {
       setCartItems(prev => [
         ...prev,
         {
           id: prev.length,
-          name,
+          name: name.trim(),
           quantity: Number(quantity),
-          price: Number(price)
+          price: parsedPrice
         }
       ])
       setName('')
@@ -56,14 +60,14 @@ export default function ButtonAdd({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.botones,
-    width: 200,
+    width: moderateScale(200),
     borderRadius: 15,
     margin: 'auto',
-    marginTop: 30
+    marginTop: verticalScale(30)
   },
   button: {
     borderRadius: 10,
-    paddingVertical: 10
+    paddingVertical: verticalScale(10)
   },
   text: {
     textAlign: 'center',

@@ -2,6 +2,7 @@ import { Text, View, StyleSheet, TouchableOpacity } from 'react-native'
 import { useState } from 'react'
 import { HistoryCartModal } from './HistoryModal'
 import { ArrayCart } from '@/interfaces/ItemsInterfaces'
+import { moderateScale, scaleFont } from '@/utils/Responsive'
 
 export default function HistoryCartButton({ date, cart } : Readonly<{date: string, cart: ArrayCart[]}>){
   const [show, setShow] = useState(false)
@@ -26,8 +27,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     backgroundColor: 'rgb(168, 168, 168)',
     borderRadius: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: moderateScale(10),
     alignSelf: 'center',
-    fontSize: 20
+    fontSize: scaleFont(20)
   }
 })

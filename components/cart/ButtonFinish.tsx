@@ -5,6 +5,7 @@ import Colors from '@/constants/Colors'
 import FontSize from '@/constants/Hierarchies'
 import { useCart } from '@/context/CartContext'
 import { storeData } from '@/utils/HistoryUtils'
+import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive'
 
 export default function ButtonFinish() {
 
@@ -28,16 +29,16 @@ export default function ButtonFinish() {
 
 const styles = StyleSheet.create({
   button:{
-    padding: 10,
+    padding: moderateScale(10),
     fontSize: FontSize.button,
     backgroundColor: Colors.botones,
     margin: 'auto',
-    marginTop: 40,
-    marginBottom: 100,
+    marginTop: verticalScale(40),
+    marginBottom: verticalScale(100),
     borderRadius: 20,
-    
+
   },
   text:{
-    fontSize: 30
+    fontSize: scaleFont(30)
   }
 })
