@@ -1,34 +1,64 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Image, TouchableOpacity, Dimensions, Pressable } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, View, Image, TouchableOpacity, Dimensions, Pressable, Animated } from 'react-native'
 import { getData } from '@/utils/HistoryUtils'
 import HistoryItem from './HistoryItem';
 import { moderateScale, verticalScale } from '@/utils/Responsive';
 
 const { height, width } = Dimensions.get('window');
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
+
 export default function History() {
   const [data, setData] = useState<any[]>([])
-  const [show, setShow] = useState(false)
+  // `visible` mantiene el panel montado; se apaga recién cuando termina el cierre.
+  const [visible, setVisible] = useState(false)
+  // 0 = cerrado (panel fuera de pantalla a la izquierda) · 1 = abierto.
+  const anim = useRef(new Animated.Value(0)).current
 
   useEffect(()=>{
     const fetchData = async () => {
       const dataHistory = await getData()
-      setData(dataHistory)
+      setData(dataHistory ?? [])
     }
     fetchData()
   },[])
 
+  const openMenu = () => {
+    setVisible(true)
+    Animated.timing(anim, {
+      toValue: 1,
+      duration: 260,
+      useNativeDriver: true,
+    }).start()
+  }
+
+  const closeMenu = () => {
+    Animated.timing(anim, {
+      toValue: 0,
+      duration: 260,
+      useNativeDriver: true,
+    }).start(({ finished }) => {
+      if (finished) setVisible(false)
+    })
+  }
+
+  // El panel entra desde el borde izquierdo hacia su posición final.
+  const translateX = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-width, 0],
+  })
+
   return(
     <View style={styles.container}>
-      {show?( 
+      {visible?(
         <>
-          <View style={styles.menu}>
+          <Animated.View style={[styles.menu, { transform: [{ translateX }] }]}>
               <HistoryItem data={data} />
-          </View>
-          <Pressable style={styles.closeMenu} onPress={() => setShow(false)}/>
-        </>     
+          </Animated.View>
+          <AnimatedPressable style={[styles.closeMenu, { opacity: anim }]} onPress={closeMenu}/>
+        </>
       ):(
-        <TouchableOpacity onPress={() => setShow(true)}>
+        <TouchableOpacity onPress={openMenu}>
           <Image style={styles.logoMenu} source={require('@/assets/img/Menu.png')}/>
         </TouchableOpacity>
       )}
@@ -53,6 +83,7 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(-61),
     marginLeft: moderateScale(-25),
     paddingTop: verticalScale(40),
+    paddingLeft: moderateScale(35),
     backgroundColor: 'white',
   },
   closeMenu: {

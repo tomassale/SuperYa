@@ -6,6 +6,8 @@ import { useCart } from '@/context/CartContext'
 import parseInputNumber from '../../../utils/ComaReplace';
 import { moderateScale, verticalScale } from '@/utils/Responsive'
 
+type FieldErrors = { name: boolean; quantity: boolean; price: boolean }
+
 type AddItem = {
   name: string
   quantity: string
@@ -13,6 +15,7 @@ type AddItem = {
   setName: (val: string) => void
   setQuantity: (val: string) => void
   setPrice: (val: string) => void
+  setErrors: (errors: FieldErrors) => void
   onAddSuccess?: () => void
 }
 
@@ -23,15 +26,25 @@ export default function ButtonAdd({
   setName,
   setQuantity,
   setPrice,
+  setErrors,
   onAddSuccess,
 }: Readonly<AddItem>) {
-  
+
   const { setCartItems } = useCart()
 
   const handleSubmit = () => {
     const parsedPrice = parseInputNumber(price)
 
-    if (name.trim() !== null && parsedPrice !== null) {
+    // Marca cada input que quedó sin datos válidos.
+    const errors: FieldErrors = {
+      name: name.trim() === '',
+      quantity: quantity.trim() === '',
+      price: price.trim() === '' || parsedPrice === null,
+    }
+
+    const isValid = !errors.name && !errors.quantity && !errors.price
+
+    if (isValid) {
       setCartItems(prev => [
         ...prev,
         {
@@ -44,7 +57,10 @@ export default function ButtonAdd({
       setName('')
       setQuantity('')
       setPrice('')
+      setErrors({ name: false, quantity: false, price: false })
       onAddSuccess?.()
+    } else {
+      setErrors(errors)
     }
   }
 
@@ -71,6 +87,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    fontSize: FontSize.button
+    fontSize: FontSize.button,
+    fontWeight: '700'
   }
 })

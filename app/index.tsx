@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import Toast from '@/components/index/notification/Notification'
 import Calculator from '@/components/index/calculator/Calculator'
 import History from '@/components/index/history/History'
+import ShoppingList from '@/components/index/shoppingList/ShoppingList'
 import CartIcon from '@/components/index/cartIcon/CartIcon'
 import Form from '@/components/index/form/Form'
 import Colors from '@/constants/Colors'
@@ -39,6 +40,7 @@ export default function Page() {
         <Text style={styles.title}>Super Ya</Text>
         <View style={styles.main}>
           <History />
+          <ShoppingList />
           <Form onItemAdded={handleItemAdded} />
           <CartIcon />
           <Calculator />

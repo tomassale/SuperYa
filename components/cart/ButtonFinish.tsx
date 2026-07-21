@@ -9,19 +9,19 @@ import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive'
 
 export default function ButtonFinish() {
 
-  const { cartItems, setCartItems, totalPrice } = useCart();
+  const { cartItems, totalPrice } = useCart();
 
-  const handleClearCart = async () =>{
-    try{
-      await storeData({ items: cartItems, finalPrice: totalPrice });
-      setCartItems([]);
-    } catch(e){
-      console.error("Error al guardar el historial: ", e);
-    }
+  // Solo guardamos la compra en el historial. El carrito se vacía al montar
+  // /Finish: si lo vaciáramos acá, este botón se desmonta (Cart lo oculta al
+  // quedar vacío) y esa desmontada cancela la navegación del Link.
+  const handleFinish = () => {
+    storeData({ items: cartItems, finalPrice: totalPrice }).catch(e =>
+      console.error("Error al guardar el historial: ", e)
+    )
   }
 
   return (
-    <Link href="/Finish" style={styles.button} onPress={handleClearCart}>
+    <Link href="/Finish" style={styles.button} onPress={handleFinish}>
       <Text style={styles.text}>Finalizar compra</Text>
     </Link>
   )
@@ -36,9 +36,9 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(40),
     marginBottom: verticalScale(100),
     borderRadius: 20,
-
   },
   text:{
-    fontSize: scaleFont(30)
+    fontSize: scaleFont(30),
+    fontWeight: '700'
   }
 })

@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
   calculator:{
     backgroundColor: '#979797',
     width: moderateScale(258),
-    height: verticalScale(450),
     borderRadius: 16,
     position: 'absolute',
     bottom: verticalScale(-60),
@@ -90,13 +89,14 @@ const styles = StyleSheet.create({
     zIndex: 2,
     paddingHorizontal: moderateScale(10),
     paddingTop: verticalScale(10),
+    paddingBottom: verticalScale(12),
   },
   closeCalculator:{
     position: 'absolute',
     top: -height + 96,
     left: -44,
     flex: 1,
-    width: width,
+    width: width + 88,
     height: height + 90,
     backgroundColor: 'rgba(0,0,0,0.25)',
     zIndex: 1

@@ -26,8 +26,9 @@ export default function FinalPrice({ items }: Readonly<ArrayCart> ) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.input,
-    margin: 'auto',
+    alignSelf: 'flex-end',
     marginTop: verticalScale(10),
+    marginRight: moderateScale(20),
     width: 'auto',
     height: 'auto',
     borderRadius: 10

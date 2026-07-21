@@ -17,8 +17,7 @@
         "backgroundColor": "#A2A498"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.tomas.dev.app",
-      "versionCode": 2
+      "package": "com.tomas.dev.app"
     },
     "web": {
       "bundler": "metro",

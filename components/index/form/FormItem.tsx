@@ -10,6 +10,7 @@ interface Input {
   keyboardType: string
   name: string
   setData: (val: string) => void
+  error?: boolean
 }
 
 export default function FormItem({data}: Readonly<{data: Input[]}>) {
@@ -20,7 +21,7 @@ export default function FormItem({data}: Readonly<{data: Input[]}>) {
         <View key={obj.id}>
           <Text style={styles.label}>{obj.label}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, obj.error && styles.inputError]}
             placeholder={obj.placeholder}
             placeholderTextColor='#807D77'
             value={obj.name}
@@ -37,6 +38,8 @@ const styles = StyleSheet.create({
   label:{
     marginLeft: moderateScale(30),
     fontSize: FontSize.label,
+    fontWeight: '700',
+    color: '#333',
     alignSelf: 'flex-start'
   },
   input:{
@@ -46,8 +49,14 @@ const styles = StyleSheet.create({
     margin: moderateScale(10),
     fontSize: FontSize.input,
     paddingHorizontal: moderateScale(10),
-    paddingVertical: verticalScale(4),
-    borderRadius: 8
+    paddingVertical: verticalScale(9),
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: 'transparent'
+  },
+  inputError:{
+    borderColor: 'red',
+    borderWidth: 1,
   },
 });
 
