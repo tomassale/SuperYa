@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import React, { useEffect, useRef, useState } from 'react'
 import Toast from '@/components/index/notification/Notification'
@@ -8,8 +8,7 @@ import ShoppingList from '@/components/index/shoppingList/ShoppingList'
 import CartIcon from '@/components/index/cartIcon/CartIcon'
 import Form from '@/components/index/form/Form'
 import Colors from '@/constants/Colors'
-import FontSize from '@/constants/Hierarchies'
-import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive'
+import { moderateScale } from '@/utils/Responsive'
 
 export default function Page() {
   const [toastVisible, setToastVisible] = useState(false)
@@ -37,7 +36,6 @@ export default function Page() {
     <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
       <Toast visible={toastVisible} />
       <View style={styles.container}>
-        <Text style={styles.title}>Super Ya</Text>
         <View style={styles.main}>
           <History />
           <ShoppingList />
@@ -60,20 +58,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: verticalScale(24),
   },
   main: {
     flex: 1,
-  },
-  title: {
-    fontSize: FontSize.title,
-    color: Colors.titulo,
-    textShadowColor: 'black',
-    textShadowRadius: 7,
-    marginTop: verticalScale(50)
-  },
-  subtitle: {
-    fontSize: scaleFont(36),
-    color: '#38434D',
+    width: '100%',
+    position: 'relative',
   },
 })

@@ -88,6 +88,6 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     fontSize: FontSize.button,
-    fontWeight: '700'
+    fontWeight: '600'
   }
 })

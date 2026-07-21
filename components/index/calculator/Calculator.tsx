@@ -70,8 +70,9 @@ export default function Calculator(){
 
 const styles = StyleSheet.create({
   container: {
-    position: 'relative',
-    bottom: verticalScale(125),
+    position: 'absolute',
+    bottom: verticalScale(30),
+    left: moderateScale(4),
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     width: moderateScale(258),
     borderRadius: 16,
     position: 'absolute',
-    bottom: verticalScale(-60),
+    bottom: 0,
     left: 0,
     zIndex: 2,
     paddingHorizontal: moderateScale(10),
@@ -93,11 +94,10 @@ const styles = StyleSheet.create({
   },
   closeCalculator:{
     position: 'absolute',
-    top: -height + 96,
-    left: -44,
-    flex: 1,
-    width: width + 88,
-    height: height + 90,
+    top: -height,
+    left: -width,
+    width: width * 3,
+    height: height * 2,
     backgroundColor: 'rgba(0,0,0,0.25)',
     zIndex: 1
   },

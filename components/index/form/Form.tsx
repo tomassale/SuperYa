@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import ButtonAdd from './ButtonAdd'
 import FormItem from './FormItem'
-import { verticalScale } from '@/utils/Responsive'
 
 type FormProps = {
   readonly onItemAdded?: () => void
@@ -35,8 +34,9 @@ export default function Form({ onItemAdded }: Readonly<FormProps>) {
   ]
 
   return (
-    <Pressable onPress={Keyboard.dismiss}>
+    <Pressable style={styles.wrapper} onPress={Keyboard.dismiss}>
       <KeyboardAwareScrollView
+        style={styles.scroll}
         contentContainerStyle={styles.container}
         enableOnAndroid={true}
         extraScrollHeight={40}
@@ -59,8 +59,19 @@ export default function Form({ onItemAdded }: Readonly<FormProps>) {
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scroll: {
+    flexGrow: 0,
+    width: '100%',
+  },
   container: {
     flexGrow: 1,
-    marginTop: verticalScale(40),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })

@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     zIndex: 1,
-    marginTop: verticalScale(-160),
-    marginLeft: moderateScale(-20),
+    top: 0,
+    left: 0,
   },
   logoMenu: {
     height: moderateScale(60),

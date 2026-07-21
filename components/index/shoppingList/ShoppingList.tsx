@@ -165,8 +165,8 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     zIndex: 2,
+    top: 0,
     right: moderateScale(-4),
-    marginTop: verticalScale(-160),
   },
   noteButton: {
     height: moderateScale(58),
