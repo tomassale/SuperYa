@@ -1,15 +1,15 @@
-import { StyleSheet, Text, View, Image, Animated } from 'react-native'
+import { StyleSheet, Text, Image, Animated } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import React, { useEffect, useRef } from 'react'
 import Colors from '@/constants/Colors'
 import { useRouter } from 'expo-router'
-import { useCart } from '@/context/CartContext'
+import { useSetCartItems } from '@/context/CartContext'
 import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive'
 
 export default function Finish() {
 
   const router = useRouter();
-  const { setCartItems } = useCart();
+  const setCartItems = useSetCartItems();
   const opacity = useRef(new Animated.Value(0)).current
 
   useEffect(() => {

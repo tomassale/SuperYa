@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   StyleSheet,
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Pressable,
-  Image,
   Dimensions,
   Keyboard,
 } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Colors from '@/constants/Colors'
-import { getNotes, saveNotes, Note } from '@/utils/NotesUtils'
+import type { Note } from '@/interfaces/ItemsInterfaces'
+import { addNote, deleteNote, getNotes, updateNote } from '@/utils/NotesUtils'
 import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive'
+import NoteInput from './NoteInput'
+import NoteRow from './NoteRow'
 
 const { height } = Dimensions.get('window')
 
 export default function ShoppingList() {
   const [show, setShow] = useState(false)
   const [notes, setNotes] = useState<Note[]>([])
-  const [text, setText] = useState('')
 
   // Al montar traemos las notas guardadas en el celular.
   useEffect(() => {
@@ -31,35 +31,30 @@ export default function ShoppingList() {
     fetchNotes()
   }, [])
 
-  // Cada vez que cambian las notas las persistimos.
-  const persist = (next: Note[]) => {
-    setNotes(next)
-    saveNotes(next)
-  }
+  const handleAdd = useCallback((text: string) => {
+    const note: Note = { id: `${Date.now()}`, text, done: false, quantity: 1 }
+    setNotes((prev) => [...prev, note])
+    addNote(note)
+  }, [])
 
-  const handleAdd = () => {
-    const value = text.trim()
-    if (!value) return
-    const note: Note = { id: `${Date.now()}`, text: value, done: false, quantity: 1 }
-    persist([...notes, note])
-    setText('')
-  }
+  // La pantalla se actualiza al instante y en la base se escribe solo la nota que cambió.
+  const applyChange = useCallback((updated: Note) => {
+    setNotes((prev) => prev.map((n) => (n.id === updated.id ? updated : n)))
+    updateNote(updated)
+  }, [])
 
-  const handleToggle = (id: string) => {
-    persist(notes.map((n) => (n.id === id ? { ...n, done: !n.done } : n)))
-  }
+  const handleToggle = useCallback((note: Note) => {
+    applyChange({ ...note, done: !note.done })
+  }, [applyChange])
 
-  const handleQuantity = (id: string, delta: number) => {
-    persist(
-      notes.map((n) =>
-        n.id === id ? { ...n, quantity: Math.max(1, (n.quantity ?? 1) + delta) } : n
-      )
-    )
-  }
+  const handleQuantity = useCallback((note: Note, delta: number) => {
+    applyChange({ ...note, quantity: Math.max(1, note.quantity + delta) })
+  }, [applyChange])
 
-  const handleDelete = (id: string) => {
-    persist(notes.filter((n) => n.id !== id))
-  }
+  const handleDelete = useCallback((id: string) => {
+    setNotes((prev) => prev.filter((n) => n.id !== id))
+    deleteNote(id)
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -68,20 +63,7 @@ export default function ShoppingList() {
           <View style={styles.panel}>
             <Text style={styles.title}>Lista de compras</Text>
 
-            <View style={styles.inputRow}>
-              <TextInput
-                style={styles.input}
-                value={text}
-                onChangeText={setText}
-                onSubmitEditing={handleAdd}
-                placeholder="Agregar..."
-                placeholderTextColor="#8a8a8a"
-                returnKeyType="done"
-              />
-              <TouchableOpacity style={styles.addButton} onPress={handleAdd}>
-                <Image style={styles.addIcon} source={require('@/assets/img/Plus.png')} />
-              </TouchableOpacity>
-            </View>
+            <NoteInput onAdd={handleAdd} />
 
             <KeyboardAwareScrollView
               style={styles.list}
@@ -93,48 +75,13 @@ export default function ShoppingList() {
                 <Text style={styles.empty}>No hay nada anotado todavía.</Text>
               ) : (
                 notes.map((note) => (
-                  <View key={note.id} style={styles.item}>
-                    <TouchableOpacity
-                      style={styles.itemTextWrapper}
-                      onPress={() => handleToggle(note.id)}
-                    >
-                      <View style={[styles.checkbox, note.done && styles.checkboxDone]}>
-                        {note.done && (
-                          <Image
-                            style={styles.checkIcon}
-                            source={require('@/assets/img/Check-circle.png')}
-                          />
-                        )}
-                      </View>
-                      <Text style={[styles.itemText, note.done && styles.itemTextDone]}>
-                        {note.text}
-                      </Text>
-                    </TouchableOpacity>
-                    <View style={styles.counter}>
-                      <TouchableOpacity
-                        style={styles.counterButton}
-                        onPress={() => handleQuantity(note.id, -1)}
-                      >
-                        <Image
-                          style={styles.counterIcon}
-                          source={require('@/assets/img/Minus.png')}
-                        />
-                      </TouchableOpacity>
-                      <Text style={styles.counterValue}>{note.quantity ?? 1}</Text>
-                      <TouchableOpacity
-                        style={styles.counterButton}
-                        onPress={() => handleQuantity(note.id, 1)}
-                      >
-                        <Image
-                          style={styles.counterIcon}
-                          source={require('@/assets/img/Plus.png')}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                    <TouchableOpacity onPress={() => handleDelete(note.id)}>
-                      <Image style={styles.trashIcon} source={require('@/assets/img/Trash.png')} />
-                    </TouchableOpacity>
-                  </View>
+                  <NoteRow
+                    key={note.id}
+                    note={note}
+                    onToggle={handleToggle}
+                    onChangeQuantity={handleQuantity}
+                    onDelete={handleDelete}
+                  />
                 ))
               )}
             </KeyboardAwareScrollView>
@@ -192,10 +139,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#4d5236',
     marginVertical: verticalScale(3),
   },
+  // En el flujo, no absolute: Android no entrega el gesto de scroll a una vista
+  // que queda fuera de los límites de su padre, y el contenedor colapsaría a 0×0.
   panel: {
-    position: 'absolute',
-    top: verticalScale(-4),
-    right: moderateScale(-4),
+    marginTop: verticalScale(-4),
+    marginRight: moderateScale(-4),
     width: moderateScale(320),
     maxHeight: height * 0.6,
     backgroundColor: 'white',
@@ -215,34 +163,6 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: verticalScale(10),
   },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: verticalScale(10),
-  },
-  input: {
-    flex: 1,
-    height: verticalScale(48),
-    backgroundColor: Colors.input,
-    borderRadius: moderateScale(10),
-    paddingHorizontal: moderateScale(12),
-    fontSize: scaleFont(21),
-    fontWeight: '700',
-    color: '#333',
-  },
-  addButton: {
-    marginLeft: moderateScale(8),
-    height: verticalScale(48),
-    width: verticalScale(48),
-    borderRadius: moderateScale(10),
-    backgroundColor: Colors.botones,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  addIcon: {
-    height: moderateScale(24),
-    width: moderateScale(24),
-  },
   list: {
     flexGrow: 0,
   },
@@ -252,77 +172,6 @@ const styles = StyleSheet.create({
     color: '#8a8a8a',
     textAlign: 'center',
     paddingVertical: verticalScale(16),
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: verticalScale(8),
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-  },
-  itemTextWrapper: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: moderateScale(6),
-  },
-  checkbox: {
-    height: moderateScale(28),
-    width: moderateScale(28),
-    borderRadius: moderateScale(6),
-    borderWidth: 3,
-    borderColor: Colors.botones,
-    marginRight: moderateScale(10),
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkboxDone: {
-    backgroundColor: Colors.finalizado,
-    borderColor: Colors.finalizado,
-  },
-  checkIcon: {
-    height: moderateScale(20),
-    width: moderateScale(20),
-  },
-  itemText: {
-    flex: 1,
-    fontSize: scaleFont(22),
-    fontWeight: '700',
-    color: '#333',
-  },
-  itemTextDone: {
-    textDecorationLine: 'line-through',
-    color: '#9a9a9a',
-  },
-  counter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: moderateScale(8),
-  },
-  counterButton: {
-    height: moderateScale(30),
-    width: moderateScale(30),
-    borderRadius: moderateScale(8),
-    backgroundColor: Colors.input,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  counterIcon: {
-    height: moderateScale(16),
-    width: moderateScale(16),
-  },
-  counterValue: {
-    minWidth: moderateScale(26),
-    textAlign: 'center',
-    fontSize: scaleFont(20),
-    fontWeight: '800',
-    color: '#333',
-    marginHorizontal: moderateScale(4),
-  },
-  trashIcon: {
-    height: moderateScale(26),
-    width: moderateScale(26),
   },
   closePanel: {
     position: 'absolute',

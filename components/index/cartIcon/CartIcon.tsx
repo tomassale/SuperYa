@@ -16,7 +16,7 @@ export default function CartIcon() {
   return (
     <View style={styles.container}>
       <Link href="/Cart">
-        <Image style={styles.image} source={require("@/assets/img/IconApp.png")}/>
+        <Image style={styles.image} source={require("@/assets/img/CartIcon.png")}/>
       </Link>
       <Text style={styles.number}>{itemsQuantity}</Text>
     </View>

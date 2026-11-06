@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import React, { useEffect, useRef, useState } from 'react'
-import Toast from '@/components/index/notification/Notification'
+import React, { useRef } from 'react'
+import Toast, { ToastHandle } from '@/components/index/notification/Notification'
 import Calculator from '@/components/index/calculator/Calculator'
 import History from '@/components/index/history/History'
 import ShoppingList from '@/components/index/shoppingList/ShoppingList'
@@ -11,30 +11,15 @@ import Colors from '@/constants/Colors'
 import { moderateScale } from '@/utils/Responsive'
 
 export default function Page() {
-  const [toastVisible, setToastVisible] = useState(false)
-  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const toastRef = useRef<ToastHandle>(null)
 
   const handleItemAdded = () => {
-    if (toastTimer.current) {
-      clearTimeout(toastTimer.current)
-    }
-    setToastVisible(true)
-    toastTimer.current = setTimeout(() => {
-      setToastVisible(false)
-    }, 2500)
+    toastRef.current?.show()
   }
-
-  useEffect(() => {
-    return () => {
-      if (toastTimer.current) {
-        clearTimeout(toastTimer.current)
-      }
-    }
-  }, [])
 
   return (
     <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
-      <Toast visible={toastVisible} />
+      <Toast ref={toastRef} />
       <View style={styles.container}>
         <View style={styles.main}>
           <History />

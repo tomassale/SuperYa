@@ -17,8 +17,7 @@ export default function History() {
 
   useEffect(()=>{
     const fetchData = async () => {
-      const dataHistory = await getData()
-      setData(dataHistory ?? [])
+      setData(await getData())
     }
     fetchData()
   },[])

@@ -1,5 +1,6 @@
 import { View, StyleSheet, ScrollView, Text } from 'react-native'
 import { Product } from '@/interfaces/ItemsInterfaces'
+import { formatPrice } from '@/utils/FormatPrice'
 import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive'
 
 type HistoryCartItemProps = {
@@ -8,12 +9,6 @@ type HistoryCartItemProps = {
 }
 
 export default function HistoryCartItem({ items, finalPrice }: Readonly<HistoryCartItemProps>) {
-  const formatPrice = (value: number) =>
-    value.toLocaleString('es-AR', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })
-
   return (
     <View style={styles.wrapper}>
       <ScrollView contentContainerStyle={styles.list}>

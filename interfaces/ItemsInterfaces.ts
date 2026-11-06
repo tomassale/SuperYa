@@ -18,3 +18,14 @@ export interface History{
   finalPrice: number
   dataExpire: number
 }
+
+export type NewPurchase = Omit<History, 'id' | 'cart'> & {
+  items: Product[]
+}
+
+export interface Note {
+  id: string
+  text: string
+  done: boolean
+  quantity: number
+}

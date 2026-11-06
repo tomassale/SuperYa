@@ -1,29 +1,21 @@
-import React, { useState } from 'react'
+import React, { memo, useState } from 'react'
 import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
 import { Product } from '@/interfaces/ItemsInterfaces'
-import { useCart } from '@/context/CartContext'
+import { useSetCartItems } from '@/context/CartContext'
+import { formatPriceCompact } from '@/utils/FormatPrice'
 import { moderateScale, scaleFont } from '@/utils/Responsive'
 
-export default function ItemDetails({ id, name, quantity, price }: Readonly<Product>) {
-  const { cartItems, setCartItems } = useCart()
+function ItemDetails({ id, name, quantity, price }: Readonly<Product>) {
+  const setCartItems = useSetCartItems()
   const [editing, setEditing] = useState(false)
   const [tempPrice, setTempPrice] = useState(String(price))
-
-  const priceFixed = price.toLocaleString('es-AR', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  })
-  const priceMultiplied = (price * quantity).toLocaleString('es-AR', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  })
 
   const handleStartEdit = () => {
     setTempPrice(String(price))
     setEditing(true)
   }
 
-  const handleFinishEdit = async () => {
+  const handleFinishEdit = () => {
     const numeric = Number(
       tempPrice
         .replace(/\./g, '')
@@ -36,16 +28,8 @@ export default function ItemDetails({ id, name, quantity, price }: Readonly<Prod
       return
     }
 
-    const itemInCart = cartItems.find(item => item.id === id)
-    if (!itemInCart) {
-      setEditing(false)
-      return
-    }
-
-    const updatedItem = { ...itemInCart, price: numeric }
-
     setCartItems(prev =>
-      prev.map(item => (item.id === id ? updatedItem : item))
+      prev.map(item => (item.id === id ? { ...item, price: numeric } : item))
     )
 
     setEditing(false)
@@ -64,19 +48,20 @@ export default function ItemDetails({ id, name, quantity, price }: Readonly<Prod
             keyboardType="numeric"
             autoFocus
             onBlur={handleFinishEdit}
-            onSubmitEditing={handleFinishEdit}
             returnKeyType="done"
           />
         ) : (
           <Pressable onPress={handleStartEdit}>
-            <Text style={styles.price}>${priceFixed}</Text>
+            <Text style={styles.price}>${formatPriceCompact(price)}</Text>
           </Pressable>
         )}
-        <Text style={styles.priceSumarized}>${priceMultiplied}</Text>
+        <Text style={styles.priceSumarized}>${formatPriceCompact(price * quantity)}</Text>
       </View>
     </View>
   )
 }
+
+export default memo(ItemDetails)
 
 const styles = StyleSheet.create({
   container: {

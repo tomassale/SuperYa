@@ -2,11 +2,13 @@ import { StyleSheet, Text, View, Pressable } from 'react-native'
 import React from 'react'
 import Colors from '@/constants/Colors'
 import FontSize from '@/constants/Hierarchies'
-import { useCart } from '@/context/CartContext'
+import { useSetCartItems } from '@/context/CartContext'
 import parseInputNumber from '../../../utils/ComaReplace';
 import { moderateScale, verticalScale } from '@/utils/Responsive'
 
 type FieldErrors = { name: boolean; quantity: boolean; price: boolean }
+
+const isPositive = (value: number | null): value is number => value !== null && value > 0
 
 type AddItem = {
   name: string
@@ -30,38 +32,37 @@ export default function ButtonAdd({
   onAddSuccess,
 }: Readonly<AddItem>) {
 
-  const { setCartItems } = useCart()
+  const setCartItems = useSetCartItems()
 
   const handleSubmit = () => {
+    const parsedQuantity = parseInputNumber(quantity)
     const parsedPrice = parseInputNumber(price)
 
-    // Marca cada input que quedó sin datos válidos.
-    const errors: FieldErrors = {
-      name: name.trim() === '',
-      quantity: quantity.trim() === '',
-      price: price.trim() === '' || parsedPrice === null,
+    // Un NaN o un negativo romperían el total y el guardado de la compra.
+    if (name.trim() === '' || !isPositive(parsedQuantity) || !isPositive(parsedPrice)) {
+      setErrors({
+        name: name.trim() === '',
+        quantity: !isPositive(parsedQuantity),
+        price: !isPositive(parsedPrice),
+      })
+      return
     }
 
-    const isValid = !errors.name && !errors.quantity && !errors.price
-
-    if (isValid) {
-      setCartItems(prev => [
-        ...prev,
-        {
-          id: prev.length,
-          name: name.trim(),
-          quantity: Number(quantity),
-          price: parsedPrice
-        }
-      ])
-      setName('')
-      setQuantity('')
-      setPrice('')
-      setErrors({ name: false, quantity: false, price: false })
-      onAddSuccess?.()
-    } else {
-      setErrors(errors)
-    }
+    setCartItems(prev => [
+      ...prev,
+      {
+        // Date.now() da un id único aunque se borren items (prev.length los colisiona).
+        id: Date.now(),
+        name: name.trim(),
+        quantity: parsedQuantity,
+        price: parsedPrice
+      }
+    ])
+    setName('')
+    setQuantity('')
+    setPrice('')
+    setErrors({ name: false, quantity: false, price: false })
+    onAddSuccess?.()
   }
 
   return (

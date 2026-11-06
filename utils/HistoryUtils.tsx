@@ -1,73 +1,93 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { ArrayCart } from '@/interfaces/ItemsInterfaces'
+import { PURCHASE_LIFETIME_MS } from '@/constants/Purchases'
+import { enqueueWrite, getDatabase } from '@/database/connection'
+import { insertPurchase } from '@/database/queries'
+import type { ArrayCart, History, Product } from '@/interfaces/ItemsInterfaces'
 
-const STORAGE_KEY = 'purchase'
-// Tiempo de vida de los datos de una compra en el celular: 3 dias.
-const EXPIRE_MS = 3 * 24 * 60 * 60 * 1000
+type PurchaseRow = {
+  id: number
+  date: string
+  hour: string
+  final_price: number
+  expires_at: number
+}
 
-// Una compra está vencida si ya pasó su fecha de expiración.
-const isExpired = (purchase: any) =>
-  purchase?.dataExpire && Date.now() >= purchase.dataExpire
+type PurchaseItemRow = {
+  purchase_id: number
+  product_id: number
+  name: string
+  quantity: number
+  price: number
+}
 
-// Elimina del celular únicamente las compras vencidas y reescribe las vigentes.
-// Devuelve las compras que siguen vigentes (o null si no quedó ninguna).
+const toProduct = (row: PurchaseItemRow): Product => ({
+  id: row.product_id,
+  name: row.name,
+  quantity: row.quantity,
+  price: row.price,
+})
+
+const groupItemsByPurchase = (rows: PurchaseItemRow[]) => {
+  const itemsByPurchase = new Map<number, Product[]>()
+  for (const row of rows) {
+    const items = itemsByPurchase.get(row.purchase_id)
+    if (items) items.push(toProduct(row))
+    else itemsByPurchase.set(row.purchase_id, [toProduct(row)])
+  }
+  return itemsByPurchase
+}
+
+// Elimina del celular únicamente las compras vencidas; sus productos caen en cascada.
 export const purgeExpiredData = async () => {
   try {
-    const jsonValue = await AsyncStorage.getItem(STORAGE_KEY)
-    if (jsonValue == null) return null
-
-    const parsedData = JSON.parse(jsonValue)
-    const purchases = Array.isArray(parsedData) ? parsedData : [parsedData]
-
-    const validPurchases = purchases.filter((purchase: any) => !isExpired(purchase))
-
-    // Si no cambió nada, no reescribimos para no tocar el almacenamiento en vano.
-    if (validPurchases.length === purchases.length) {
-      return validPurchases
-    }
-
-    if (validPurchases.length === 0) {
-      // No queda ninguna compra vigente: se borra la clave del celular.
-      await AsyncStorage.removeItem(STORAGE_KEY)
-      return null
-    }
-
-    // Se reescribe dejando SOLO las vigentes: las vencidas quedan fuera del celular.
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(validPurchases))
-    return validPurchases
+    await enqueueWrite((db) =>
+      db.runAsync('DELETE FROM purchases WHERE expires_at <= ?', Date.now())
+    )
   } catch (e) {
     console.log("No se pudo purgar el historial \n", e)
-    return null
   }
 }
 
 export const storeData = async (cart: ArrayCart) => {
   const date = new Date().toLocaleDateString('es-AR', {day: '2-digit', month: '2-digit'})
   const hour = new Date().toLocaleTimeString('es-AR', {hour: '2-digit', minute: '2-digit'})
-  const dataExpire = Date.now() + EXPIRE_MS
+  const dataExpire = Date.now() + PURCHASE_LIFETIME_MS
   try{
     // Al guardar aprovechamos para descartar las compras ya vencidas.
-    const existingData = await purgeExpiredData()
-    let purchases = Array.isArray(existingData) ? existingData : [];
+    await purgeExpiredData()
 
-    const data = {
-      id: dataExpire,
-      cart: [cart],
-      date: date,
-      hour: hour,
-      finalPrice: cart.finalPrice,
-      dataExpire: dataExpire
-    }
-
-    purchases.push(data);
-    const jsonValue = JSON.stringify(purchases);
-    await AsyncStorage.setItem(STORAGE_KEY, jsonValue);
+    // En transacción: nunca queda una compra sin parte de sus productos.
+    await enqueueWrite((db) =>
+      db.withTransactionAsync(() =>
+        insertPurchase(db, { date, hour, finalPrice: cart.finalPrice, dataExpire, items: cart.items })
+      )
+    )
   } catch (e){
     console.log("No se guardo \n", e)
   }
 }
 
-export const getData = async () => {
+export const getData = async (): Promise<History[]> => {
   // Leer el historial ya descarta de paso las compras vencidas.
-  return await purgeExpiredData()
+  await purgeExpiredData()
+  try {
+    const db = await getDatabase()
+    // Tras la purga solo quedan productos de compras vigentes: no hace falta un join.
+    const [purchases, itemRows] = await Promise.all([
+      db.getAllAsync<PurchaseRow>('SELECT * FROM purchases ORDER BY id'),
+      db.getAllAsync<PurchaseItemRow>('SELECT * FROM purchase_items ORDER BY id'),
+    ])
+    const itemsByPurchase = groupItemsByPurchase(itemRows)
+
+    return purchases.map((purchase) => ({
+      id: purchase.id,
+      cart: [{ items: itemsByPurchase.get(purchase.id) ?? [], finalPrice: purchase.final_price }],
+      date: purchase.date,
+      hour: purchase.hour,
+      finalPrice: purchase.final_price,
+      dataExpire: purchase.expires_at,
+    }))
+  } catch (e) {
+    console.log("No se pudo leer el historial \n", e)
+    return []
+  }
 }

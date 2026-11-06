@@ -1,6 +1,6 @@
 import { StyleSheet, Text } from 'react-native'
 import { Link } from 'expo-router'
-import React from 'react'
+import React, { useRef } from 'react'
 import Colors from '@/constants/Colors'
 import FontSize from '@/constants/Hierarchies'
 import { useCart } from '@/context/CartContext'
@@ -10,11 +10,15 @@ import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive'
 export default function ButtonFinish() {
 
   const { cartItems, totalPrice } = useCart();
+  // Un doble toque no debe guardar la compra dos veces.
+  const saved = useRef(false)
 
   // Solo guardamos la compra en el historial. El carrito se vacía al montar
   // /Finish: si lo vaciáramos acá, este botón se desmonta (Cart lo oculta al
   // quedar vacío) y esa desmontada cancela la navegación del Link.
   const handleFinish = () => {
+    if (saved.current) return
+    saved.current = true
     storeData({ items: cartItems, finalPrice: totalPrice }).catch(e =>
       console.error("Error al guardar el historial: ", e)
     )

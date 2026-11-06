@@ -2,23 +2,15 @@ import { StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { ArrayCart } from '@/interfaces/ItemsInterfaces';
 import Colors from '@/constants/Colors';
+import { formatPrice } from '@/utils/FormatPrice';
 import { moderateScale, verticalScale, scaleFont } from '@/utils/Responsive';
 
-export default function FinalPrice({ items }: Readonly<ArrayCart> ) {
+export default function FinalPrice({ finalPrice }: Readonly<ArrayCart> ) {
 
-  let finalPrice: number = 0
-  items.forEach((obj) => {
-    finalPrice += obj.price * obj.quantity;
-  })
-
-  const precioFinal: string = finalPrice.toLocaleString('es-AR', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  })
-  
+  // El total ya viene calculado y memoizado desde CartContext (totalPrice); no lo recalculamos.
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Final: ${precioFinal}</Text>
+      <Text style={styles.text}>Final: ${formatPrice(finalPrice)}</Text>
     </View>
   )
 }

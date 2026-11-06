@@ -1,22 +1,28 @@
 import { StyleSheet, View, Image, Pressable } from 'react-native'
-import React from 'react'
-import { useCart } from '@/context/CartContext'
+import React, { memo, useMemo } from 'react'
+import { useSetCartItems } from '@/context/CartContext'
 import ItemUtils from '@/utils/ItemUtils'
 import { moderateScale, verticalScale } from '@/utils/Responsive'
 
-export default function ItemFunctions({ itemId }: {itemId: number}) {
+const MinusIcon = require('@/assets/img/Minus.png')
+const PlusIcon = require('@/assets/img/Plus.png')
+const TrashIcon = require('@/assets/img/Trash.png')
 
-  const { cartItems, setCartItems }  = useCart()
+function ItemFunctions({ itemId }: {itemId: number}) {
 
-  const utils = new ItemUtils(setCartItems, itemId)
-  
-  const functions = [
-    { id: 1, function: utils.restar, img: require('@/assets/img/Minus.png')},
-    { id: 2, function: utils.sumar, img: require('@/assets/img/Plus.png')},
-    { id: 3, function: utils.borrar, img: require('@/assets/img/Trash.png')}
-  ]
-  
-  return cartItems? (   
+  const setCartItems = useSetCartItems()
+
+  // La instancia y el listado dependen solo del item; no hace falta recrearlos en cada render.
+  const functions = useMemo(() => {
+    const utils = new ItemUtils(setCartItems, itemId)
+    return [
+      { id: 1, function: utils.restar, img: MinusIcon },
+      { id: 2, function: utils.sumar, img: PlusIcon },
+      { id: 3, function: utils.borrar, img: TrashIcon },
+    ]
+  }, [setCartItems, itemId])
+
+  return (
     <View style={styles.container}>
       {functions.map(obj => (
         <Pressable key={obj.id} onPress={obj.function} hitSlop={15}>
@@ -24,8 +30,10 @@ export default function ItemFunctions({ itemId }: {itemId: number}) {
         </Pressable>
       ))}
     </View>
-  ) : null
+  )
 }
+
+export default memo(ItemFunctions)
 
 const styles = StyleSheet.create({
   container: {
